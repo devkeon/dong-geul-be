@@ -29,8 +29,6 @@ public class MemberController {
 
 	@GetMapping("/validEmail")
 	public Response<Void> validateEmail(@RequestParam("email") String email) {
-		log.info("email={}", email);
-
 		memberService.checkEmailValid(email);
 
 		return Response.ok();
