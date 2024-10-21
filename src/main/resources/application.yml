@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: dong-geul-be
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${GOOGLE_EMAIL}
+    password: ${GOOGLE_APP_KEY}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    generate-ddl: false
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+jwt:
+  token:
+    secret-key: ${JWT_SECRET_KEY}
+    expire:
+      access: ${JWT_ACCESS_EXPIRE}
+      refresh: ${JWT_REFRESH_EXPIRE}
+
+
