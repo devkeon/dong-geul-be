@@ -1,0 +1,59 @@
+version: '3'
+
+services:
+  mysql:
+    container_name: mysql1
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: mysql1
+      MYSQL_USER: lee
+      MYSQL_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: 1234
+      TZ: 'Asia/Seoul'
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/conf.d:/etc/mysql/conf.d
+    command:
+      - "mysqld"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    networks:
+      - app_network
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - app_network
+
+  backend:
+    container_name: backend
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - MYSQL_USER=lee
+      - MYSQL_PASSWORD=1234
+      - MYSQL_URL=jdbc:mysql://mysql:3306/mysql1?serverTimezone=UTC
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge

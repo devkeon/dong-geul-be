@@ -29,11 +29,23 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+  springdoc:
+    api-docs:
+      enabled: true
+    swagger-ui:
+      enabled: true
+
 jwt:
   token:
     secret-key: ${JWT_SECRET_KEY}
     expire:
       access: ${JWT_ACCESS_EXPIRE}
       refresh: ${JWT_REFRESH_EXPIRE}
+
 
 
