@@ -1,4 +1,4 @@
-package com.nemo.dong_geul_be.club;
+package com.nemo.dong_geul_be.clubAndHeadmem;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
-public class Club {
+public class ClubAndHeadMem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

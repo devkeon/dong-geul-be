@@ -1,7 +1,7 @@
 package com.nemo.dong_geul_be.csv;
 
-import com.nemo.dong_geul_be.club.Club;
-import com.nemo.dong_geul_be.club.ClubRepository;
+import com.nemo.dong_geul_be.clubAndHeadmem.ClubAndHeadMem;
+import com.nemo.dong_geul_be.clubAndHeadmem.ClubRepository;
 import com.opencsv.CSVReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -26,7 +26,7 @@ public class CSVDataLoader implements CommandLineRunner {
             while((line = csvReader.readNext())!=null){
                 String clubName = line[0].replace("\uFEFF", "").trim(); // String 그대로 처리
                 String studentName = line[1].trim();
-                Club club = new Club();
+                ClubAndHeadMem club = new ClubAndHeadMem();
                 club.setClubName(clubName);
                 club.setStudentName(studentName);
                 clubRepository.save(club);
