@@ -6,9 +6,9 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_DATABASE: mysql1
-      MYSQL_USER: lee
-      MYSQL_PASSWORD: 1234
-      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       TZ: 'Asia/Seoul'
     ports:
       - "3306:3306"
@@ -48,9 +48,9 @@ services:
       mysql:
         condition: service_healthy
     environment:
-      - MYSQL_USER=lee
-      - MYSQL_PASSWORD=1234
-      - MYSQL_URL=jdbc:mysql://mysql:3306/mysql1?serverTimezone=UTC
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_URL=jdbc:mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@mysql:3306/mysql1?serverTimezone=UTC
     networks:
       - app_network
 
