@@ -1,11 +1,12 @@
 package com.nemo.dong_geul_be.clubAndHeadmem;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.nemo.dong_geul_be.mypage.domain.MyClub;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -16,6 +17,9 @@ public class ClubAndHeadMem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String clubName;
-    private String studentName;
+    private String managerEmail;
+
+    @OneToMany(mappedBy = "clubAndHeadMem")
+    private List<MyClub> clubMembers= new ArrayList<>();
 
 }
