@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/donggeul")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class BoardDGController {    //동글동글 : 동아리 홍보
 
@@ -22,28 +22,28 @@ public class BoardDGController {    //동글동글 : 동아리 홍보
     private final CommentService commentService;
 
     // 메인페이지
-    @GetMapping("")
+    @GetMapping("/donggeul")
     public Response<List<PostDTO>> getFalsePostTypePosts() {
         List<PostDTO> posts = postService.getFalsePostTypePosts();
         return Response.ok(posts);
     }
 
     // 동글동글, 교내
-    @GetMapping("/on")
+    @GetMapping("/donggeul/on")
     public Response<List<PostDTO>> getPostFalseExternalFalsePosts() {
         List<PostDTO> posts = postService.getPostFalseExternalFalsePosts();
         return Response.ok(posts);
     }
 
     // 동글동글, 교외
-    @GetMapping("/off")
+    @GetMapping("/donggeul/off")
     public Response<List<PostDTO>> getPostFalseExternalTruePosts() {
         List<PostDTO> posts = postService.getPostFalseExternalTruePosts();
         return Response.ok(posts);
     }
 
     // 게시글 상세보기
-    @GetMapping("/{postId}")
+    @GetMapping("/donggeul/{postId}")
     public Response<PostDetailResponse> getPostDetails(@PathVariable Long postId) {
         Post post = postService.getPostById(postId);
         List<Comment> comments = commentService.getCommentsByPost(postId);
@@ -53,14 +53,14 @@ public class BoardDGController {    //동글동글 : 동아리 홍보
     }
 
     // 글 작성
-    @PostMapping("/create")
+    @PostMapping("/donggeul/create")
     public Response<Post> createDonggeulPost(@RequestBody CreatePostRequest createPostRequest) {
         Post newPost = postService.createDonggeulPost(createPostRequest);
         return Response.ok(newPost);
     }
 
     // 댓글 작성
-    @PostMapping("/{postId}/comment")
+    @PostMapping("/donggeul/{postId}/comment")
     public Response<Comment> createComment(@PathVariable Long postId, @RequestBody String content) {
         Comment newComment = commentService.createComment(postId, content);
         return Response.ok(newComment);
