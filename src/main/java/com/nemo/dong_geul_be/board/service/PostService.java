@@ -19,9 +19,67 @@ public class PostService {
     private final PostRepository postRepository;
 
     // 재잘재잘 게시글 가져올 때
-    public List<Post> getTruePostTypePosts() {  //재잘재잘
-        return postRepository.findByPostTypeTrue();
+    public List<PostDTO> getTruePostTypePosts() {  //재잘재잘
+        List<Post> posts = postRepository.findByPostTypeTrue();
+        return posts.stream()
+                .map(post -> new PostDTO(       //게시글 목록으로 제목, 내용, 날짜, 댓글 수, 교외/교내 분류
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getCreatedAt(),
+                        post.getCommentCount(),
+                        post.getIsExternal()
+                ))
+                .collect(Collectors.toList());
+
     }
+
+    // 재잘재잘 게시글이면서 교내 동아리
+    public List<PostDTO> getPostTrueExternalFalsePosts() {
+        List<Post> posts = postRepository.findByPostTypeTrueAndIsExternalFalse();
+        return posts.stream()
+                .map(post -> new PostDTO(
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getCreatedAt(),
+                        post.getCommentCount(),
+                        post.getIsExternal()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    // 재잘재잘 게시글이면서 교외 동아리
+    public List<PostDTO> getPostTrueExternalTruePosts() {
+        List<Post> posts = postRepository.findByPostTypeTrueAndIsExternalTrue();
+        return posts.stream()
+                .map(post -> new PostDTO(
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getCreatedAt(),
+                        post.getCommentCount(),
+                        post.getIsExternal()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    // 재잘재잘 게시판에서 게시글 생성 (post_type = true)
+    public Post createJejalPost(CreatePostRequest request
+                                   //, Member member
+    ) {
+        Post post = Post.builder()
+                .isExternal(request.getIsExternal())
+                .title(request.getTitle())
+                .content(request.getContent())
+                .hashtag(request.getHashtag())
+                .postType(true)  // 재잘재잘 게시판은 무조건 true
+                .createdAt(LocalDateTime.now())
+                //.member(member)
+                .commentCount(0)
+                .build();
+
+        return postRepository.save(post);
+    }
+
+
 
     // 동글동글 게시글 가져올 때
     public List<PostDTO> getFalsePostTypePosts() {
