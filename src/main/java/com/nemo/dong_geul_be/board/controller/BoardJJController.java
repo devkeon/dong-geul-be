@@ -23,7 +23,7 @@ public class BoardJJController {    //재잘재잘 : 자유게시판
     private final CommentService commentService;
 
     //메인페이지
-    @GetMapping("") // 재잘재잘은 booelean이 1인 게시글
+    @GetMapping("/jejal") // 재잘재잘은 booelean이 1인 게시글
     public Response<List<PostDTO>> getTruePostTypePosts() {
         List<PostDTO> posts = postService.getTruePostTypePosts();
 
@@ -31,21 +31,21 @@ public class BoardJJController {    //재잘재잘 : 자유게시판
     }
 
     // 재잘재잘, 교내
-    @GetMapping("/on")
+    @GetMapping("/jejal/on")
     public Response<List<PostDTO>> getPostTrueExternalFalsePosts() {
         List<PostDTO> posts = postService.getPostTrueExternalFalsePosts();
         return Response.ok(posts);
     }
 
     // 재잘재잘, 교외
-    @GetMapping("/off")
+    @GetMapping("/jejal/off")
     public Response<List<PostDTO>> getPostTrueExternalTruePosts() {
         List<PostDTO> posts = postService.getPostTrueExternalTruePosts();
         return Response.ok(posts);
     }
 
     // 게시글 상세보기
-    @GetMapping("/{postId}")
+    @GetMapping("/jejal/{postId}")
     public Response<PostDetailResponse> getPostDetails(@PathVariable Long postId) {
         Post post = postService.getPostById(postId);
         List<Comment> comments = commentService.getCommentsByPost(postId);
@@ -55,14 +55,14 @@ public class BoardJJController {    //재잘재잘 : 자유게시판
     }
 
     // 글 작성
-    @PostMapping("/create")
+    @PostMapping("/jejal/create")
     public Response<Post> createJejalPost(@RequestBody CreatePostRequest createPostRequest) {
         Post newPost = postService.createJejalPost(createPostRequest);
         return Response.ok(newPost);
     }
 
     // 댓글 작성
-    @PostMapping("/{postId}/comment")
+    @PostMapping("/jejal/{postId}/comment")
     public Response<Comment> createComment(@PathVariable Long postId, @RequestBody String content) {
         Comment newComment = commentService.createComment(postId, content);
         return Response.ok(newComment);
