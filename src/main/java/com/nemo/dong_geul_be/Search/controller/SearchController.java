@@ -4,12 +4,17 @@ import com.nemo.dong_geul_be.Search.domain.SearchLog;
 import com.nemo.dong_geul_be.Search.request.SearchLogSaveRequest;
 import com.nemo.dong_geul_be.Search.response.SearchResponse;
 import com.nemo.dong_geul_be.Search.service.SearchLogService;
+import com.nemo.dong_geul_be.Search.service.SearchService;
+import com.nemo.dong_geul_be.board.domain.dto.response.PostDTO;
+import com.nemo.dong_geul_be.board.domain.entity.Post;
+import com.nemo.dong_geul_be.global.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,13 +22,7 @@ import java.util.List;
 public class SearchController {
 
     private final SearchLogService searchLogService;
-
-    @Operation(summary = "검색 기록 저장", description = "최근 검색 기록을 저장합니다.")
-    @PostMapping("/searching")
-    public ResponseEntity<SearchResponse> saveRecentSearchLog(@RequestBody SearchLogSaveRequest request){
-        searchLogService.saveRecentSearchLog(1L,request);
-        return ResponseEntity.ok(new SearchResponse<>("최근 기록 검색 저장 완료"));
-    }
+    private final SearchService searchService;
 
     @Operation(summary = "최근 검색 기록 조회", description = "최근 검색 기록을 조회합니다.")
     @GetMapping("/searchLogs")
@@ -31,5 +30,21 @@ public class SearchController {
         // 만약 userId가 필요하다면 쿼리 파라미터로 받는 것이 좋습니다.
         List<SearchLog> recentSearchLogList = searchLogService.findRecentSearchLogs(userId);
         return ResponseEntity.ok(new SearchResponse(recentSearchLogList, "최근 검색 기록 조회 완료"));
+    }
+
+
+
+    @Operation(summary = "검색 후 게시물 조회", description = "검색 키워드를 바탕으로 제목, 내용 및 해시태그가 일치하는 게시물 조회 후, 검색 기록 저장")
+    @GetMapping("/search")
+    public Response<List<PostDTO>> searchPosts(@RequestParam String keyword) {
+        searchLogService.saveRecentSearchLog(1L, keyword); // 1L은 임시 userId
+
+        List<Post> posts = searchService.searchPosts(keyword);
+
+        List<PostDTO> postDTOs = posts.stream()
+                .map(post -> new PostDTO(post.getTitle(), post.getContent(), post.getCreatedAt(), post.getCommentCount(), post.getIsExternal()))
+                .collect(Collectors.toList());
+
+        return Response.ok(postDTOs);
     }
 }

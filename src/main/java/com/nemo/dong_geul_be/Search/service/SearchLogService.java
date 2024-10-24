@@ -15,10 +15,10 @@ public class SearchLogService {
 
     private final RedisTemplate<String, SearchLog> redisTemplate;
 
-    public void saveRecentSearchLog(Long memberId, SearchLogSaveRequest request){
+    public void saveRecentSearchLog(Long memberId, String content){
         String key = "SearchLog" + memberId;
         SearchLog value = SearchLog.builder()
-                .content(request.getContent())
+                .content(content)
                 .build();
         Long size = redisTemplate.opsForList().size(key);
         if (size==10) redisTemplate.opsForList().rightPop(key);

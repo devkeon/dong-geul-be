@@ -1,10 +1,11 @@
 package com.nemo.dong_geul_be.board.repository;
 
+import com.nemo.dong_geul_be.Search.repository.PostRepositoryCustom;
 import com.nemo.dong_geul_be.board.domain.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
-public interface PostRepository extends JpaRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Long> , PostRepositoryCustom {
     List<Post> findByPostTypeTrue();    // 재잘재잘
 
     List<Post> findByPostTypeFalse();   // 동글동글
