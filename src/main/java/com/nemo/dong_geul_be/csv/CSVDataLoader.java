@@ -28,7 +28,7 @@ public class CSVDataLoader implements CommandLineRunner {
                 String studentName = line[1].trim();
                 ClubAndHeadMem club = new ClubAndHeadMem();
                 club.setClubName(clubName);
-                club.setStudentName(studentName);
+                club.setManagerEmail(studentName);
                 clubRepository.save(club);
             }
         }
