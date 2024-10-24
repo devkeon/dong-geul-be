@@ -29,11 +29,11 @@ jobs:
         distribution: "adopt"
 
     # Github secrets로부터 데이터를 받아서, 워크 플로우에 파일을 생성
-    - name: Make application.properties
+    - name: Make application.yml
       run: |
         cd ./src/main/resources
-        touch ./application.properties
-        echo "${{ secrets.PROPERTIES }}" > ./application.properties
+        touch ./application.yml
+        echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
       shell: bash
 
     # gradle을 통해 소스를 빌드.
@@ -57,9 +57,9 @@ jobs:
       uses: appleboy/ssh-action@master
       id: deploy
       with:
-        host: ${{ secrets.HOST }}
+        host: ${{ secrets.EC2_HOST }}
         username: ubuntu
-        key: ${{ secrets.KEY }}
+        key: ${{ secrets.EC2_SSH_KEY }}
         envs: GITHUB_SHA
       script: |
         sudo docker rm -f $(docker ps -qa)
