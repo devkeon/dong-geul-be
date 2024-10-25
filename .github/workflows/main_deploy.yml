@@ -52,11 +52,11 @@ jobs:
           # Docker 로그인
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
-          # Docker 이미지를 빌드하고, 올바른 레포지토리 경로로 태깅
-          docker build -f Dockerfile -t spongging/${{ secrets.DOCKER_REPO }}/dong-geul-be_backend .
-
+          # Docker 이미지를 빌드하고, 태그를 사용하여 구분
+          docker build -f Dockerfile -t spongging/${{ secrets.DOCKER_REPO }}:dong-geul-be_backend .
+  
           # Docker Hub로 푸시
-          docker push spongging/${{ secrets.DOCKER_REPO }}/dong-geul-be_backend
+          docker push spongging/${{ secrets.DOCKER_REPO }}:dong-geul-be_backend
           
       # appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고, script를 실행합니다.
       # script의 내용은 도커의 기존 프로세스들을 제거하고, docker repo로부터 방금 위에서 push한 내용을 pull 받아 실행하는 것입니다.
