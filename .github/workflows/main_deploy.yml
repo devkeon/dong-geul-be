@@ -61,30 +61,15 @@ jobs:
       # appleboy/ssh-action@master 액션을 사용하여 지정한 서버에 ssh로 접속하고, script를 실행합니다.
       # script의 내용은 도커의 기존 프로세스들을 제거하고, docker repo로부터 방금 위에서 push한 내용을 pull 받아 실행하는 것입니다.
       # 실행 시, dong-geul-be_backend를 사용합니다.
-      - name: Deploy to server via SSH
+      - name: Deploy to server
         uses: appleboy/ssh-action@master
+        id: deploy
         with:
-            host: ${{ secrets.EC2_HOST }}
-            username: ubuntu
-            key: ${{ secrets.EC2_SSH_KEY }}
-            port: 22
-            script: |
-              
-              # 필요한 경우 Docker 그룹에 사용자 추가 (한 번만 실행하면 됨)
-              sudo usermod -aG docker ${{ secrets.DOCKER_USERNAME }} || true
-              
-              # Docker 데몬 시작
-              sudo systemctl start docker
-              
-              # Docker 로그인 (sudo 사용)
-              echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-              
-              # 기존 컨테이너 중지 및 삭제 (sudo 사용)
-              sudo docker stop dong-geul-be-backend || true
-              sudo docker rm dong-geul-be-backend || true
-              
-              # 최신 이미지 풀 (sudo 사용)
-              sudo docker pull ${{ secrets.DOCKER_USERNAME }}/dong_geul_be_repo:latest
-              
-              # 새로운 컨테이너 실행 (sudo 사용)
-              sudo docker run -d --name dong-geul-be-backend -p 80:80${{ secrets.DOCKER_USERNAME }}/dong_geul_be_repo:latest
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo docker rm -f $(docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_REPO }}/dong-geul-be_backend
+            docker-compose up -d
+            docker image prune -f
