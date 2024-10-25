@@ -32,7 +32,7 @@ public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
 	private final AuthCodeRepository authCodeRepository;
-	private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	private final PasswordEncoder passwordEncoder;
 	private final JavaMailSender javaMailSender;
 	private final String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+~`|}{$begin:math:display$$end:math:display$:;?><,./-])[A-Za-z\\d!@#$%^&*()_+~`|}{\\[\\]:;?><,./-]{8,14}$";
 

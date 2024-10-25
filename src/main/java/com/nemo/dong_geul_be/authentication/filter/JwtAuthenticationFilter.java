@@ -37,13 +37,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private static String GRANT_TYPE = "Bearer ";
 
 	protected List<String> filterPassList = List.of("/favicon.ico", "/api/login", "/api/validEmail",
-		"/api/validNickname", "/api/sign-up", "/api/auth-code", "/api/authentication");
+		"/api/validNickname", "/api/sign-up", "/api/auth-code", "/v3/api-docs");
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
 
-		if (filterPassList.contains(request.getRequestURI())){
+		log.info("uri={}", request.getRequestURI());
+
+		if (filterPassList.contains(request.getRequestURI()) || request.getRequestURI().contains("swagger")){
 			filterChain.doFilter(request, response);
 			return;
 		}
