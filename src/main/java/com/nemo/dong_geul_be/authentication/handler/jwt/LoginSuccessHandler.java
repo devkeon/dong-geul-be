@@ -65,9 +65,9 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 		ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
 			.path("/")
-			.httpOnly(true)
+			.httpOnly(false)
 			.maxAge(COOKIE_EXPIRATION)
-			.sameSite("None")
+			.sameSite("Lax")
 			.secure(true)
 			.build();
 
