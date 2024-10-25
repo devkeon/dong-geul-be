@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
 	public Response<Void> businessExceptionHandler(BusinessException businessException) {
 
 		log.error("BusinessException: {}", businessException.getCode());
-		log.error("stack: ", businessException.getStackTrace());
+		log.error("error: ", businessException);
 
 		return Response.fail(businessException.getCode());
 	}
@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(value = MessagingException.class)
 	public Response<Void> messagingExceptionHandler(MessagingException messagingException) {
 
-		log.error("stack: ", messagingException.getStackTrace());
+		log.error("error: ", messagingException);
 
 		return Response.fail(Code.MAIL_SERVER_ERROR);
 	}
