@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MyPageResponse<T>  {
     private String message;
-    private List<T> data;
+    private List<MyPageDTO> data;
 
 
     @Builder
