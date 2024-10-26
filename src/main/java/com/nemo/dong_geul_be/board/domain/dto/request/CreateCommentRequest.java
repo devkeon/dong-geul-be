@@ -5,9 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreatePostRequest {
-    private Boolean isExternal;
-    private String title;
+public class CreateCommentRequest {
+    private Long postId;
+    private Long memberId;
     private String content;
-    private String hashtag;
 }

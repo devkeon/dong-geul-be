@@ -1,17 +1,18 @@
 package com.nemo.dong_geul_be.board.domain.dto.response;
 
 import lombok.Getter;
-
 import java.util.List;
 
-// 이미지를 포함하지 않는 Response (Jejal)
+// 간단화된 Response (동글)
 @Getter
-public class PostDetailResponse {
-    private SimplePostDTO post;          // 게시글 정보
-    private List<SimpleCommentDTO> comments;  // 댓글 목록
+public class PostDetailIMGResponse {
+    private SimplePostDTO post;           // 간단한 게시글 정보
+    private List<String> imageUrls;       // 이미지 URL 목록
+    private List<SimpleCommentDTO> comments; // 간단한 댓글 목록
 
-    public PostDetailResponse(SimplePostDTO post, List<SimpleCommentDTO> comments) {
+    public PostDetailIMGResponse(SimplePostDTO post, List<String> imageUrls, List<SimpleCommentDTO> comments) {
         this.post = post;
+        this.imageUrls = imageUrls;
         this.comments = comments;
     }
 
@@ -23,12 +24,11 @@ public class PostDetailResponse {
         private String hashtag;
         private Boolean postType;
         private String createdAt;
-        private int commentCount;
+        private Integer commentCount;
         private Boolean isExternal;
-        private Long memberId;  // memberId 추가
+        private Long memberId;
 
-        public SimplePostDTO(Long id, String title, String content, String hashtag, Boolean postType,
-                             String createdAt, int commentCount, Boolean isExternal, Long memberId) {
+        public SimplePostDTO(Long id, String title, String content, String hashtag, Boolean postType, String createdAt, Integer commentCount, Boolean isExternal, Long memberId) {
             this.id = id;
             this.title = title;
             this.content = content;
@@ -37,18 +37,17 @@ public class PostDetailResponse {
             this.createdAt = createdAt;
             this.commentCount = commentCount;
             this.isExternal = isExternal;
-            this.memberId = memberId;  // memberId 설정
+            this.memberId = memberId;
         }
     }
 
     @Getter
     public static class SimpleCommentDTO {
         private Long id;
-        private Long memberId;
         private String content;
         private String createdAt;
-        private boolean isAuthor;
-
+        private Long memberId;
+        private boolean isAuthor;  // 댓글 작성자가 게시글 작성자인지 여부
 
         public SimpleCommentDTO(Long id, String content, String createdAt, Long memberId, boolean isAuthor) {
             this.id = id;

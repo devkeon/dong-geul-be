@@ -19,9 +19,7 @@ public class Post_IMG {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    @Column(nullable = false, length = 50)
+    //url 최대길이 변경
+    @Column(nullable = false, length = 255)
     private String url;  // s3 주소
-
-    @Column(nullable = false)
-    private Boolean state;  // 이미지 존재 여부
 }

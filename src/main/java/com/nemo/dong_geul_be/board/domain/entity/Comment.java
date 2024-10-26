@@ -22,7 +22,7 @@ public class Comment {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = true)    //임시로 null값 가능하도록
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Column(nullable = false, columnDefinition = "TEXT")

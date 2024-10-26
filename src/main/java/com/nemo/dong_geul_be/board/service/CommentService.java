@@ -1,10 +1,12 @@
 package com.nemo.dong_geul_be.board.service;
 
+import com.nemo.dong_geul_be.board.domain.dto.request.CreateCommentRequest;
 import com.nemo.dong_geul_be.board.domain.entity.Comment;
 import com.nemo.dong_geul_be.board.domain.entity.Post;
 import com.nemo.dong_geul_be.board.repository.CommentRepository;
 import com.nemo.dong_geul_be.board.repository.PostRepository;
 import com.nemo.dong_geul_be.member.domain.entity.Member;
+import com.nemo.dong_geul_be.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +19,20 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
+
     private final PostService postService;
 
-    //로그인이 아직 없기에 member 지움
-    public Comment createComment(Long postId, String content
-                                 //, Member member
-    ) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
+    public Comment createComment(Long postId, CreateCommentRequest request) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
+        Member member = memberRepository.findById(request.getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
 
         Comment comment = Comment.builder()
-                .content(content)
+                .content(request.getContent())
                 .post(post)
-                //.member(member)
+                .member(member)
                 .createdAt(LocalDateTime.now())
                 .build();
 
