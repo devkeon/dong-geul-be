@@ -50,4 +50,12 @@ public class MyPageController {
         mypageService.rejectClubJoin(clubRequest);
         return ResponseEntity.ok().build();
     }
+
+    @Operation(summary = "운영진 계정 인증", description = "운영진 계정으로 인증을 요청합니다")
+    @PostMapping("/mypage/club-manager")
+    public ResponseEntity<Void> requestClubManager(@RequestBody MyPageRequest.ConfirmOrRejectRequest clubManagerRequest){
+        // 운영진 계정 인증 요청
+        mypageService.requestClubManager(clubManagerRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }

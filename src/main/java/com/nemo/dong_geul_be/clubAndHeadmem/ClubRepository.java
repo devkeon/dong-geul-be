@@ -11,4 +11,7 @@ public interface ClubRepository extends JpaRepository<ClubAndHeadMem, Long> {
 
     //헤드 이메일로 클럽 이름 찾기
     Optional<ClubAndHeadMem> findClubAndHeadMemByManagerEmail(String managerEmail);
+
+    //헤드 이메일과 클럽 이름으로 클럽 찾기
+    Optional<ClubAndHeadMem> findClubAndHeadMemByManagerEmailAndClubName(String managerEmail, String clubName);
 }
