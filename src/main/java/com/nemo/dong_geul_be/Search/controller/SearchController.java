@@ -8,6 +8,8 @@ import com.nemo.dong_geul_be.Search.service.SearchService;
 import com.nemo.dong_geul_be.authentication.util.SecurityContextUtil;
 import com.nemo.dong_geul_be.board.domain.dto.response.PostDTO;
 import com.nemo.dong_geul_be.board.domain.entity.Post;
+import com.nemo.dong_geul_be.board.domain.entity.Post_IMG;
+import com.nemo.dong_geul_be.board.repository.PostImageRepository;
 import com.nemo.dong_geul_be.global.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class SearchController {
     private final SearchLogService searchLogService;
     private final SearchService searchService;
     private final SecurityContextUtil securityContextUtil;
+    private final PostImageRepository postImageRepository;
 
     @Operation(summary = "최근 검색 기록 조회", description = "최근 검색 기록을 조회합니다.")
     @GetMapping("/searchLogs")
@@ -43,7 +46,20 @@ public class SearchController {
         List<Post> posts = searchService.searchPosts(keyword);
 
         List<PostDTO> postDTOs = posts.stream()
-                .map(post -> new PostDTO(post.getTitle(), post.getContent(), post.getCreatedAt(), post.getCommentCount(), post.getIsExternal()))
+                .map(post -> {
+                    // 해당 게시글에 연결된 이미지 중 첫 번째 이미지를 가져옴
+                    List<Post_IMG> images = postImageRepository.findByPostId(post.getId());
+                    String imageUrl = images.isEmpty() ? null : images.get(0).getUrl();
+
+                    return new PostDTO(
+                            post.getTitle(),
+                            post.getContent(),
+                            post.getCreatedAt(),
+                            post.getCommentCount(),
+                            post.getIsExternal(),
+                            imageUrl // 이미지가 있으면 첫 번째 이미지 URL, 없으면 null
+                    );
+                })
                 .collect(Collectors.toList());
 
         return Response.ok(postDTOs);

@@ -34,7 +34,7 @@ public class Post {
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = true)    //임시로 테스트할때 null값 가능하도록
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Setter
