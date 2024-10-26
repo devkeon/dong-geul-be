@@ -47,5 +47,20 @@ jwt:
       access: ${JWT_ACCESS_EXPIRE}
       refresh: ${JWT_REFRESH_EXPIRE}
 
+## AWS S3
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: donggeul
+
+aws:
+  s3:
+    connectionTimeout: 5000
+    socketTimeout: 5000
 
 

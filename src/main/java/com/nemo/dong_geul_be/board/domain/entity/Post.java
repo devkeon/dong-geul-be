@@ -37,6 +37,9 @@ public class Post {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    //나중에 동아리별 글 목록 조회 시 club이랑 mapping할 필요 있음
+    private String club;
+
     @Setter
     @Column(nullable = false, columnDefinition = "int default 0")
     private int commentCount;
