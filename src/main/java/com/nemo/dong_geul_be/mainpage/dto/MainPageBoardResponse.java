@@ -13,7 +13,9 @@ import java.util.List;
 @Builder
 public class MainPageBoardResponse {
 
-    private List<MainPostDTO> posts; // 여러 게시물을 담는 리스트
+    private String code;
+    private List<MainPostDTO> data; // 여러 게시물을 담는 리스트
+    private String message;
 
     @Getter
     @Setter
@@ -23,9 +25,7 @@ public class MainPageBoardResponse {
     public static class MainPostDTO {
 
         private String title;
-
         private String content;
-
         private LocalDateTime createdAt;
     }
 }

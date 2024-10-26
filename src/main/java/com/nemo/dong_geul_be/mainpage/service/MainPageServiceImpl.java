@@ -22,7 +22,11 @@ public class MainPageServiceImpl implements MainPageService {
                 .map(post -> new MainPageBoardResponse.MainPostDTO(post.getTitle(), post.getContent(), post.getCreatedAt()))
                 .collect(Collectors.toList());
 
-        return new MainPageBoardResponse(postDTOs);
+        return MainPageBoardResponse.builder()
+                .code("success") // 예시 코드
+                .data(postDTOs)
+                .message("DongGeul 게시판이 성공적으로 조회되었습니다.")
+                .build();
     }
 
     @Override
@@ -33,6 +37,10 @@ public class MainPageServiceImpl implements MainPageService {
                 .map(post -> new MainPageBoardResponse.MainPostDTO(post.getTitle(), post.getContent(), post.getCreatedAt()))
                 .collect(Collectors.toList());
 
-        return new MainPageBoardResponse(postDTOs);
+        return MainPageBoardResponse.builder()
+                .code("success") // 예시 코드
+                .data(postDTOs)
+                .message("JaeJal 게시판이 성공적으로 조회되었습니다.")
+                .build();
     }
 }
