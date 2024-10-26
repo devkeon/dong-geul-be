@@ -23,6 +23,7 @@ public class JsonAuthenticationFilter extends AbstractAuthenticationProcessingFi
 	private static final String LOGIN_REQUEST_URI = "/api/login";
 	private static final String CONTENT_TYPE = "application/json";
 	private static final String HTTP_METHOD = "POST";
+
 	private static final String EMAIL = "email";
 	private static final String PASSWORD = "password";
 	private static final AntPathRequestMatcher DEFAULT_LOGIN_PATH_REQUEST_MATCHER =
