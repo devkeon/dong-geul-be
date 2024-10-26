@@ -8,7 +8,16 @@ import lombok.*;
 
 import java.util.List;
 
-public class MyPageResponse {
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class MyPageResponse<T>  {
+    private String message;
+    private List<T> data;
+
 
     @Builder
     @Getter
@@ -21,11 +30,11 @@ public class MyPageResponse {
         Role role;
         //가입한 동아리 리스트
         List<ClubDTO> myClubList;
-        //요청 수락 대기중인 회원 리스트
+        //요청 수락 대기중인 회원 리스트 -> Member일 경우 null
         List<WaitingClubMemberDTO> waitingMemberList;
         //전체 동아리 이름 리스트
-        List<ClubDTO> allClubList;
-        //현재 관리하는 동아리 이름
+        List<allClubDTO> allClubList;
+        //현재 관리하는 동아리 이름 -> Member일 경우 null
         String currentClubName;
     }
 
@@ -38,6 +47,15 @@ public class MyPageResponse {
         String clubName;
         IsConfirmed isConfirmed;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class allClubDTO{
+        String clubName;
+    }
+
 
     @Builder
     @Getter

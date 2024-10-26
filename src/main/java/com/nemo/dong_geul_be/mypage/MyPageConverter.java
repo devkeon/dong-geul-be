@@ -12,7 +12,7 @@ import java.util.List;
 public class MyPageConverter {
 
 
-    public static MyPageResponse.MyPageDTO toMyPageDTO(Member member,List<MyClub> clubRequests, List<ClubAndHeadMem> clubAndHeadMems) {
+    public static MyPageResponse.MyPageDTO toMyPageDTO(Member member,List<MyClub> clubRequests, List<ClubAndHeadMem> clubAndHeadMems, ClubAndHeadMem clubAndHeadMem) {
             //마이페이지 정보 변환
             return MyPageResponse.MyPageDTO.builder()
                     .nickName(member.getNickname())
@@ -21,6 +21,7 @@ public class MyPageConverter {
                     .myClubList(toMyClubDTOList(member.getMyClubs()))
                     .waitingMemberList(toWaitingClubMemberDTOList(clubRequests))
                     .allClubList(toAllClubDTOList(clubAndHeadMems))
+                    .currentClubName(clubAndHeadMem == null ? null : clubAndHeadMem.getClubName())
                     .build();
     }
 
@@ -34,10 +35,10 @@ public class MyPageConverter {
                 .toList();
     }
 
-    private static List<MyPageResponse.ClubDTO> toAllClubDTOList(List<ClubAndHeadMem> clubAndHeadMems){
+    private static List<MyPageResponse.allClubDTO> toAllClubDTOList(List<ClubAndHeadMem> clubAndHeadMems){
         // 전체 동아리 이름 리스트 응답 정보 변환
         return clubAndHeadMems.stream()
-                .map(clubAndHeadMem -> MyPageResponse.ClubDTO.builder()
+                .map(clubAndHeadMem -> MyPageResponse.allClubDTO.builder()
                         .clubName(clubAndHeadMem.getClubName())
                         .build())
                 .toList();

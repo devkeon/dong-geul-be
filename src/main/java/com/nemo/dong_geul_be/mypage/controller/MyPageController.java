@@ -21,10 +21,10 @@ public class MyPageController {
 
     @Operation(summary = "마이 페이지", description = "마이페이지 필요 정보를 반환합니다.")
     @GetMapping("")
-    public ResponseEntity<MyPageResponse.MyPageDTO> getMyPageInfo(@RequestParam Long memberId){
-        MyPageResponse.MyPageDTO mypageDTO = mypageService.getMyPageInfo(memberId);
+    public ResponseEntity<MyPageResponse> getMyPageInfo(@RequestParam Long memberId){
+        MyPageResponse mypageInfo = mypageService.getMyPageInfo(memberId);
 
-        return ResponseEntity.ok(mypageDTO);
+        return ResponseEntity.ok(mypageInfo);
     }
 
     @Operation(summary = "동아리 요청", description = "동아리 가입 요청을 합니다.")
@@ -44,7 +44,7 @@ public class MyPageController {
     }
 
     @Operation(summary = "동아리 거절", description = "동아리 가입을 거절합니다.")
-    @PostMapping("/club-reject")
+    @DeleteMapping("/club-reject")
     public ResponseEntity<Void> rejectClubJoin(@RequestBody MyPageRequest.ConfirmOrRejectRequest clubRequest){
         // 동아리 가입 거절
         mypageService.rejectClubJoin(clubRequest);
