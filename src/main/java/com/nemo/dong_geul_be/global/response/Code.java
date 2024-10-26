@@ -22,6 +22,10 @@ public enum Code {
 	REFRESH_TOKEN_NOT_FOUND("ATH-003", "Refresh token not found."),
 	MEMBER_LOGIN_SESSION_EXPIRED("ATH-004", "Auth session expired."),
 
+	CLUB_NOT_FOUND("CLB-001", "Club not found."),
+	CLUB_REQUEST_ALREADY_EXISTS("CLB-002", "Club request already exists."),
+	CLUB_HEADMEM_NOT_FOUND("CLB-003", "Club head member not found."),
+
 	SERVER_ERROR("SEV-999", "Check the server.")
 	;
 

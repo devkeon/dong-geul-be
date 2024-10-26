@@ -43,10 +43,4 @@ public class MyClub {
                 this.isConfirmed = IsConfirmed.JOIN; // IsConfirmed.CONFIRMED로 변경
         }
 
-        public void cancelMember() {
-                if (this.isConfirmed == IsConfirmed.REJECT) {
-                        throw new IllegalStateException("Member is already CANCEL.");
-                }
-                this.isConfirmed = IsConfirmed.REJECT; // IsConfirmed.CANCEL로 변경
-        }
 }
