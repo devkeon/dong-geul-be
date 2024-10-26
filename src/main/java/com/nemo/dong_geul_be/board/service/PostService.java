@@ -188,10 +188,10 @@ public class PostService {
         // 역할 확인: MANAGER가 아니면 예외 발생
         if (!member.getRole().equals(Role.MANAGER)) {
             throw new IllegalArgumentException("Only MANAGER role can create a post");
-            //response, code 방식으로 해결하고 싶음..
         }
 
         Post post = Post.builder()
+                .club(member.getManageClubName())
                 .isExternal(request.getIsExternal())
                 .title(request.getTitle())
                 .content(request.getContent())
