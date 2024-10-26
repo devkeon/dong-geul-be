@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -140,6 +141,11 @@ public class MyPageService {
         Member member = memberRepository.findMemberByEmail(clubManagerRequest.getEmail())
                 .orElseThrow(() -> new BusinessException(Code.MEMBER_NOT_FOUND));
         memberRepository.updateToManager(Role.MANAGER, member.getId()) ;
+        //headmem
+        /*Optional<ClubAndHeadMem> clubAndHeadMemByManagerEmail = clubAndHeadMemRepository.findClubAndHeadMemByManagerEmail(member.getEmail());
+        ClubAndHeadMem clubAndHeadMem1 = clubAndHeadMemByManagerEmail.get();
+        String club = clubAndHeadMem1.getClubName();*/
+        member.setManageClubName(clubAndHeadMem.getClubName());
     }
 
 }

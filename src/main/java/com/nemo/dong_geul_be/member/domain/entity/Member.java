@@ -2,15 +2,11 @@ package com.nemo.dong_geul_be.member.domain.entity;
 
 import com.nemo.dong_geul_be.mypage.domain.MyClub;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLRestriction(value = "auth <> false")
+@Setter
 public class Member {
 
 	@Id @Column(name = "member_id")
@@ -47,6 +44,8 @@ public class Member {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "auth_code")
 	private AuthCode authCode;
+
+	private String manageClubName;
 
 	@OneToMany(mappedBy = "member")
 	private List<MyClub> myClubs = new ArrayList<>();

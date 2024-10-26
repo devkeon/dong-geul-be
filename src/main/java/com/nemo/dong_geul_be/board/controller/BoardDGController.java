@@ -107,16 +107,23 @@ public class BoardDGController {    // 동글동글 : 동아리 홍보
         // SecurityContextUtil을 사용하여 현재 로그인된 사용자의 memberId를 가져오기
         Long memberId = securityContextUtil.getContextMemberInfo().getMemberId();
 
+        // 요청 객체 생성 및 필드 설정
         DonggeulPostRequest donggeulPostRequest = new DonggeulPostRequest();
         donggeulPostRequest.setIsExternal(isExternal);
         donggeulPostRequest.setTitle(title);
         donggeulPostRequest.setContent(content);
         donggeulPostRequest.setHashtag(hashtag);
-        donggeulPostRequest.setImages(images);
         donggeulPostRequest.setMemberId(memberId);
 
+        // images 필드가 null이 아니고 비어 있지 않은 경우에만 설정
+        if (images != null && !images.isEmpty()) {
+            donggeulPostRequest.setImages(images);
+        }
+
+        // 게시물 생성 서비스 호출
         Post newPost = postService.createDonggeulPost(donggeulPostRequest);
 
+        // 게시물 생성 후 DTO로 응답 구성
         PostDetailIMGResponse.SimplePostDTO simplePostDTO = new PostDetailIMGResponse.SimplePostDTO(
                 newPost.getId(),
                 newPost.getTitle(),
@@ -129,43 +136,44 @@ public class BoardDGController {    // 동글동글 : 동아리 홍보
                 newPost.getMember().getId()
         );
 
+        // 이미지 URL 리스트 가져오기
         List<String> imageUrls = postService.getImageUrlsByPostId(newPost.getId());
         List<PostDetailIMGResponse.SimpleCommentDTO> comments = new ArrayList<>();
 
+        // 최종 응답 객체 생성
         PostDetailIMGResponse response = new PostDetailIMGResponse(simplePostDTO, imageUrls, comments);
         return Response.ok(response);
     }
 
     // 댓글 작성
     @PostMapping("/donggeul/{postId}/comment")
-    public CommentResponse createComment(@PathVariable Long postId, @RequestBody CreateCommentRequest request) {
-        // SecurityContextUtil을 사용하여 현재 로그인된 사용자의 memberId를 가져오기
+    public Response<CommentResponse> createComment(
+            @PathVariable Long postId,
+            @RequestBody CreateCommentRequest request) {
+
+        // 현재 로그인한 사용자의 memberId 가져오기
         Long memberId = securityContextUtil.getContextMemberInfo().getMemberId();
 
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
+        // 요청 객체에 postId와 memberId 설정
+        request.setPostId(postId);
+        request.setMemberId(memberId);
 
-        Comment comment = Comment.builder()
-                .content(request.getContent())
-                .post(post)
-                .member(member)
-                .createdAt(LocalDateTime.now())
-                .build();
+        // commentService에 postId와 request를 전달
+        Comment newComment = commentService.createComment(postId, request);
 
-        postService.incrementCommentCount(postId);
-        commentRepository.save(comment);
+        // 게시글 작성자 ID와 댓글 작성자 ID 비교하여 isAuthor 값 설정
+        boolean isAuthor = newComment.getMember().getId().equals(newComment.getPost().getMember().getId());
 
-        boolean isAuthor = member.getId().equals(post.getMember().getId());
-
-        return new CommentResponse(
-                comment.getId(),
+        // CommentResponseDto로 변환 후 반환
+        CommentResponse responseDto = new CommentResponse(
+                newComment.getId(),
                 postId,
-                member.getId(),
-                comment.getContent(),
-                comment.getCreatedAt().toString(),
+                newComment.getMember().getId(),
+                newComment.getContent(),
+                newComment.getCreatedAt().toString(),
                 isAuthor
         );
+
+        return Response.ok(responseDto);
     }
 }

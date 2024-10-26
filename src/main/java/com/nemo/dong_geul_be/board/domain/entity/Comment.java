@@ -25,6 +25,8 @@ public class Comment {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    private String club;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 

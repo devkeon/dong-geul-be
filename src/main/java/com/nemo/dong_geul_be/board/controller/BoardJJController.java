@@ -123,8 +123,12 @@ public class BoardJJController {    //재잘재잘 : 자유게시판
             @PathVariable Long postId,
             @RequestBody CreateCommentRequest request) {
 
-        // 요청 객체에 postId 설정
+        // 현재 로그인한 사용자의 memberId 가져오기
+        Long memberId = securityContextUtil.getContextMemberInfo().getMemberId();
+
+        // 요청 객체에 postId와 memberId 설정
         request.setPostId(postId);
+        request.setMemberId(memberId);
 
         // commentService에 postId와 request를 전달
         Comment newComment = commentService.createComment(postId, request);
@@ -144,4 +148,5 @@ public class BoardJJController {    //재잘재잘 : 자유게시판
 
         return Response.ok(responseDto);
     }
+
 }
