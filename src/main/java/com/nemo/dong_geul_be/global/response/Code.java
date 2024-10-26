@@ -25,6 +25,7 @@ public enum Code {
 	CLUB_NOT_FOUND("CLB-001", "Club not found."),
 	CLUB_REQUEST_ALREADY_EXISTS("CLB-002", "Club request already exists."),
 	CLUB_HEADMEM_NOT_FOUND("CLB-003", "Club head member not found."),
+	CLUB_HEADMEMANDNAME_NOT_FOUND("CLB-004", "요청된 계정은 해당 동아리의 운영진이 아닙니다."),
 
 	SERVER_ERROR("SEV-999", "Check the server.")
 	;

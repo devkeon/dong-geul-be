@@ -128,4 +128,18 @@ public class MyPageService {
         myClubRepository.delete(myClub);
 
     }
+
+    // 운영진 계정 인증 요청
+    @Transactional
+    public void requestClubManager(MyPageRequest.ConfirmOrRejectRequest clubManagerRequest){
+        //해당 멤버의 계정과 동아리 이름이 있는 ClubAndHeadMem 조회
+        //매칭되는 게 없으면 ClubAndHeadMemAndNameNotFound 예외 발생
+        ClubAndHeadMem clubAndHeadMem = clubAndHeadMemRepository.findClubAndHeadMemByManagerEmailAndClubName(clubManagerRequest.getEmail(), clubManagerRequest.getClubName())
+                .orElseThrow(() -> new BusinessException(Code.CLUB_HEADMEMANDNAME_NOT_FOUND));
+        //계정 role 변경
+        Member member = memberRepository.findMemberByEmail(clubManagerRequest.getEmail())
+                .orElseThrow(() -> new BusinessException(Code.MEMBER_NOT_FOUND));
+        memberRepository.updateToManager(Role.MANAGER, member.getId()) ;
+    }
+
 }
