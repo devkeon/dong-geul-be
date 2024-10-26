@@ -1,10 +1,10 @@
 package com.nemo.dong_geul_be.mypage.service;
 
 
+import com.nemo.dong_geul_be.authentication.util.SecurityContextUtil;
 import com.nemo.dong_geul_be.clubAndHeadmem.ClubAndHeadMem;
 import com.nemo.dong_geul_be.clubAndHeadmem.ClubRepository;
 import com.nemo.dong_geul_be.global.exception.BusinessException;
-import com.nemo.dong_geul_be.global.exception.GlobalExceptionHandler;
 import com.nemo.dong_geul_be.global.response.Code;
 import com.nemo.dong_geul_be.member.domain.entity.Member;
 import com.nemo.dong_geul_be.member.domain.entity.Role;
@@ -34,7 +34,10 @@ public class MyPageService {
     private final MyClubRepository myClubRepository;
     private final ClubRepository clubAndHeadMemRepository;
 
-    public MyPageResponse getMyPageInfo(Long memberId) {
+    private final SecurityContextUtil securityContextUtil;
+
+    public MyPageResponse getMyPageInfo() {
+        Long memberId= securityContextUtil.getContextMemberInfo().getMemberId();
         //회원 정보 조회
         Member member= memberRepository.findById(memberId).orElseThrow(
                 () -> new BusinessException(Code.MEMBER_NOT_FOUND));
@@ -66,7 +69,8 @@ public class MyPageService {
 
     @Transactional
     // 동아리 가입 요청
-    public void requestClubJoin(Long memberId,MyPageRequest.MyClubRequest clubRequest){
+    public void requestClubJoin(MyPageRequest.MyClubRequest clubRequest){
+        Long memberId= securityContextUtil.getContextMemberInfo().getMemberId();
         // 동아리 가입 요청
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessException(Code.MEMBER_NOT_FOUND));
