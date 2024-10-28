@@ -9,9 +9,9 @@ import java.util.Optional;
 public interface ClubRepository extends JpaRepository<ClubAndHeadMem, Long> {
     Optional<ClubAndHeadMem> findClubAndHeadMemByClubName(String clubName);
 
-    //헤드 이메일로 클럽 이름 찾기
     Optional<ClubAndHeadMem> findClubAndHeadMemByManagerEmail(String managerEmail);
 
-    //헤드 이메일과 클럽 이름으로 클럽 찾기
     Optional<ClubAndHeadMem> findClubAndHeadMemByManagerEmailAndClubName(String managerEmail, String clubName);
+
+    Optional<ClubAndHeadMem> findByClubName(String clubName);
 }

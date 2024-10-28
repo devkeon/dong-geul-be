@@ -2,23 +2,27 @@ package com.nemo.dong_geul_be.board.repository;
 
 import com.nemo.dong_geul_be.Search.repository.PostRepositoryCustom;
 import com.nemo.dong_geul_be.board.domain.entity.Post;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
+@Repository
 public interface PostRepository extends JpaRepository<Post, Long> , PostRepositoryCustom {
-    List<Post> findByPostTypeTrue();    // 재잘재잘
+    List<Post> findByPostTypeTrueOrderByCreatedAtDesc();
 
-    List<Post> findByPostTypeFalse();   // 동글동글
+    List<Post> findByPostTypeTrueAndIsExternalFalseOrderByCreatedAtDesc();
 
-    List<Post> findByIsExternalFalse(); // 교내
+    List<Post> findByPostTypeTrueAndIsExternalTrueOrderByCreatedAtDesc();
 
-    List<Post> findByIsExternalTrue();  // 교외
+    List<Post> findByPostTypeFalseOrderByCreatedAtDesc();
 
-    List<Post> findByPostTypeFalseAndIsExternalFalse(); // 동글동글, 교내
+    List<Post> findByPostTypeFalseAndIsExternalFalseOrderByCreatedAtDesc();
 
-    List<Post> findByPostTypeFalseAndIsExternalTrue();  // 동글동글, 교외
+    List<Post> findByPostTypeFalseAndIsExternalTrueOrderByCreatedAtDesc();
 
-    List<Post> findByPostTypeTrueAndIsExternalFalse();  // 재잘재잘, 교내
-
-    List<Post> findByPostTypeTrueAndIsExternalTrue(); // 재잘재잘, 교외
+    @Query("SELECT p FROM Post p WHERE p.club IN :clubNames AND p.postType = false ORDER BY p.createdAt DESC")
+    List<Post> findByClubIdInAndPostTypeFalse(@Param("clubNames") List<String> clubNames);
 }

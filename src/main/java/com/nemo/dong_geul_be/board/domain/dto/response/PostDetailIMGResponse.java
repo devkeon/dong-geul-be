@@ -27,8 +27,11 @@ public class PostDetailIMGResponse {
         private Integer commentCount;
         private Boolean isExternal;
         private Long memberId;
+        private String club;
 
-        public SimplePostDTO(Long id, String title, String content, String hashtag, Boolean postType, String createdAt, Integer commentCount, Boolean isExternal, Long memberId) {
+        public SimplePostDTO(Long id, String title, String content, String hashtag,
+                             Boolean postType, String createdAt, Integer commentCount,
+                             Boolean isExternal, Long memberId, String club) {
             this.id = id;
             this.title = title;
             this.content = content;
@@ -38,6 +41,7 @@ public class PostDetailIMGResponse {
             this.commentCount = commentCount;
             this.isExternal = isExternal;
             this.memberId = memberId;
+            this.club = club;
         }
     }
 
