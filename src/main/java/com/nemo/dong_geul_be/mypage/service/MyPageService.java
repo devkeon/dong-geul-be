@@ -57,6 +57,7 @@ public class MyPageService {
         MyPageResponse.MyPageDTO myPageDTO=MyPageConverter.toMyPageDTO(member, clubRequests, clubAndHeadMemRepository.findAll(), clubAndHeadMem);
 
         return MyPageResponse.builder()
+                .code("success")
                 .message("마이페이지 정보 조회 성공")
                 .data(List.of(myPageDTO))
                 .build();
