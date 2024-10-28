@@ -1,15 +1,21 @@
 package com.nemo.dong_geul_be.board.service;
 
+import com.nemo.dong_geul_be.authentication.util.SecurityContextUtil;
 import com.nemo.dong_geul_be.board.domain.dto.request.DonggeulPostRequest;
 import com.nemo.dong_geul_be.board.domain.dto.request.JejalPostRequest;
 import com.nemo.dong_geul_be.board.domain.dto.response.PostDTO;
+import com.nemo.dong_geul_be.board.domain.entity.ClubFavorite;
 import com.nemo.dong_geul_be.board.domain.entity.Post;
 import com.nemo.dong_geul_be.board.domain.entity.Post_IMG;
+import com.nemo.dong_geul_be.board.repository.ClubFavoriteRepository;
 import com.nemo.dong_geul_be.board.repository.PostImageRepository;
 import com.nemo.dong_geul_be.board.repository.PostRepository;
+import com.nemo.dong_geul_be.clubAndHeadmem.ClubAndHeadMem;
+import com.nemo.dong_geul_be.clubAndHeadmem.ClubRepository;
 import com.nemo.dong_geul_be.member.domain.entity.Member;
 import com.nemo.dong_geul_be.member.domain.entity.Role;
 import com.nemo.dong_geul_be.member.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,65 +33,49 @@ public class PostService {
     private final S3Service s3Service;
     private final PostImageRepository postImageRepository;
     private final MemberRepository memberRepository;
+    private final ClubFavoriteRepository clubFavoriteRepository;
+    private final ClubRepository clubRepository;
+    private final SecurityContextUtil securityContextUtil;
+
+
+    // 게시글 목록 가져오기
+    //return posts.stream() 중복 파트 리팩토링
+    private PostDTO convertToPostDTO(Post post) {
+        // 게시글에 연결된 첫 번째 이미지 URL 가져오기
+        List<Post_IMG> images = postImageRepository.findByPostId(post.getId());
+        String imageUrl = images.isEmpty() ? null : images.get(0).getUrl();
+
+        return new PostDTO(
+                post.getTitle(),
+                post.getContent(),
+                post.getCreatedAt(),
+                post.getCommentCount(),
+                post.getIsExternal(),
+                imageUrl
+        );
+    }
 
     // 재잘재잘 게시글 가져올 때
     public List<PostDTO> getTruePostTypePosts() {
-        List<Post> posts = postRepository.findByPostTypeTrue();
+        List<Post> posts = postRepository.findByPostTypeTrueOrderByCreatedAtDesc();
         return posts.stream()
-                .map(post -> {
-                    // 해당 게시글에 연결된 이미지 중 첫 번째 이미지를 가져옴
-                    List<Post_IMG> images = postImageRepository.findByPostId(post.getId());
-                    String imageUrl = images.isEmpty() ? null : images.get(0).getUrl();
-
-                    return new PostDTO(
-                            post.getTitle(),
-                            post.getContent(),
-                            post.getCreatedAt(),
-                            post.getCommentCount(),
-                            post.getIsExternal(),
-                            imageUrl // 이미지가 있으면 첫 번째 이미지 URL, 없으면 null
-                    );
-                })
+                .map(this::convertToPostDTO)
                 .collect(Collectors.toList());
     }
 
     // 재잘재잘 게시글이면서 교내 동아리
     public List<PostDTO> getPostTrueExternalFalsePosts() {
-        List<Post> posts = postRepository.findByPostTypeTrueAndIsExternalFalse();
+        List<Post> posts = postRepository.findByPostTypeTrueAndIsExternalFalseOrderByCreatedAtDesc();
         return posts.stream()
-                .map(post -> {
-                    List<Post_IMG> images = postImageRepository.findByPostId(post.getId());
-                    String imageUrl = images.isEmpty() ? null : images.get(0).getUrl();
-
-                    return new PostDTO(
-                            post.getTitle(),
-                            post.getContent(),
-                            post.getCreatedAt(),
-                            post.getCommentCount(),
-                            post.getIsExternal(),
-                            imageUrl
-                    );
-                })
+                .map(this::convertToPostDTO)
                 .collect(Collectors.toList());
     }
 
     // 재잘재잘 게시글이면서 교외 동아리
     public List<PostDTO> getPostTrueExternalTruePosts() {
-        List<Post> posts = postRepository.findByPostTypeTrueAndIsExternalTrue();
+        List<Post> posts = postRepository.findByPostTypeTrueAndIsExternalTrueOrderByCreatedAtDesc();
         return posts.stream()
-                .map(post -> {
-                    List<Post_IMG> images = postImageRepository.findByPostId(post.getId());
-                    String imageUrl = images.isEmpty() ? null : images.get(0).getUrl();
-
-                    return new PostDTO(
-                            post.getTitle(),
-                            post.getContent(),
-                            post.getCreatedAt(),
-                            post.getCommentCount(),
-                            post.getIsExternal(),
-                            imageUrl
-                    );
-                })
+                .map(this::convertToPostDTO)
                 .collect(Collectors.toList());
     }
 
@@ -113,62 +103,25 @@ public class PostService {
 
     // 동글동글 게시글 가져올 때
     public List<PostDTO> getFalsePostTypePosts() {
-        List<Post> posts = postRepository.findByPostTypeFalse();
+        List<Post> posts = postRepository.findByPostTypeFalseOrderByCreatedAtDesc();
         return posts.stream()
-                .map(post -> {
-                    // 해당 게시글에 연결된 이미지 중 첫 번째 이미지를 가져옴
-                    List<Post_IMG> images = postImageRepository.findByPostId(post.getId());
-                    String imageUrl = images.isEmpty() ? null : images.get(0).getUrl();
-
-                    return new PostDTO(
-                            post.getTitle(),
-                            post.getContent(),
-                            post.getCreatedAt(),
-                            post.getCommentCount(),
-                            post.getIsExternal(),
-                            imageUrl // 이미지가 있으면 첫 번째 이미지 URL, 없으면 null
-                    );
-                })
+                .map(this::convertToPostDTO)
                 .collect(Collectors.toList());
     }
 
     // 동글동글 게시글이면서 교내 동아리
     public List<PostDTO> getPostFalseExternalFalsePosts() {
-        List<Post> posts = postRepository.findByPostTypeFalseAndIsExternalFalse();
+        List<Post> posts = postRepository.findByPostTypeFalseAndIsExternalFalseOrderByCreatedAtDesc();
         return posts.stream()
-                .map(post -> {
-                    List<Post_IMG> images = postImageRepository.findByPostId(post.getId());
-                    String imageUrl = images.isEmpty() ? null : images.get(0).getUrl();
-
-                    return new PostDTO(
-                            post.getTitle(),
-                            post.getContent(),
-                            post.getCreatedAt(),
-                            post.getCommentCount(),
-                            post.getIsExternal(),
-                            imageUrl
-                    );
-                })
+                .map(this::convertToPostDTO)
                 .collect(Collectors.toList());
     }
 
     // 동글동글 게시글이면서 교외 동아리
     public List<PostDTO> getPostFalseExternalTruePosts() {
-        List<Post> posts = postRepository.findByPostTypeFalseAndIsExternalTrue();
+        List<Post> posts = postRepository.findByPostTypeFalseAndIsExternalTrueOrderByCreatedAtDesc();
         return posts.stream()
-                .map(post -> {
-                    List<Post_IMG> images = postImageRepository.findByPostId(post.getId());
-                    String imageUrl = images.isEmpty() ? null : images.get(0).getUrl();
-
-                    return new PostDTO(
-                            post.getTitle(),
-                            post.getContent(),
-                            post.getCreatedAt(),
-                            post.getCommentCount(),
-                            post.getIsExternal(),
-                            imageUrl
-                    );
-                })
+                .map(this::convertToPostDTO)
                 .collect(Collectors.toList());
     }
 
@@ -236,4 +189,37 @@ public class PostService {
                 .map(Post_IMG::getUrl)
                 .collect(Collectors.toList());
     }
+
+    // 관심목록 추가 Service
+    @Transactional
+    public void likeAndFavoriteClub(Long postId) {
+
+        Long memberId = securityContextUtil.getContextMemberInfo().getMemberId();
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("해당 게시글이 없습니다."));
+        String postClub = post.getClub(); // 클럽 이름이 문자열로 저장된 필드
+
+        ClubAndHeadMem club = clubRepository.findByClubName(postClub)
+                .orElseThrow(() -> new RuntimeException("해당 클럽이 없습니다."));
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("해당 사용자가 없습니다."));
+
+        clubFavoriteRepository.findByMemberAndClub(member, club)
+                .orElseGet(() -> clubFavoriteRepository.save(new ClubFavorite(member, club)));
+    }
+
+    public List<PostDTO> getFavoriteClubPosts() {
+
+        Long memberId = securityContextUtil.getContextMemberInfo().getMemberId();
+
+        List<String> favoriteClubNames = clubFavoriteRepository.findClubNamesByMemberId(memberId);
+        List<Post> posts = postRepository.findByClubIdInAndPostTypeFalse(favoriteClubNames);
+
+        return posts.stream()
+                .map(this::convertToPostDTO)
+                .collect(Collectors.toList());
+    }
+
 }

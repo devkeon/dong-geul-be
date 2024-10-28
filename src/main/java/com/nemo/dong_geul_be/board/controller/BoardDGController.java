@@ -36,6 +36,7 @@ public class BoardDGController {    // 동글동글 : 동아리 홍보
     private final SecurityContextUtil securityContextUtil; // SecurityContextUtil 추가
     private final MemberRepository memberRepository;
 
+
     // 메인페이지
     @GetMapping("/donggeul")
     public Response<List<PostDTO>> getFalsePostTypePosts() {
@@ -75,7 +76,8 @@ public class BoardDGController {    // 동글동글 : 동아리 홍보
                 post.getCreatedAt().toString(),
                 post.getCommentCount(),
                 post.getIsExternal(),
-                post.getMember().getId()
+                post.getMember().getId(),
+                post.getClub()
         );
 
         Long postAuthorId = post.getMember().getId();
@@ -133,7 +135,8 @@ public class BoardDGController {    // 동글동글 : 동아리 홍보
                 newPost.getCreatedAt().toString(),
                 newPost.getCommentCount(),
                 newPost.getIsExternal(),
-                newPost.getMember().getId()
+                newPost.getMember().getId(),
+                newPost.getClub()
         );
 
         // 이미지 URL 리스트 가져오기
@@ -151,11 +154,10 @@ public class BoardDGController {    // 동글동글 : 동아리 홍보
             @PathVariable Long postId,
             @RequestBody CreateCommentRequest request) {
 
-        // 현재 로그인한 사용자의 memberId 가져오기
+
         Long memberId = securityContextUtil.getContextMemberInfo().getMemberId();
 
-        // 요청 객체에 postId와 memberId 설정
-        request.setPostId(postId);
+        // 요청 객체에 memberId만 설정
         request.setMemberId(memberId);
 
         // commentService에 postId와 request를 전달
@@ -175,5 +177,17 @@ public class BoardDGController {    // 동글동글 : 동아리 홍보
         );
 
         return Response.ok(responseDto);
+    }
+
+    @PostMapping("/donggeul/{postId}/favorite")
+    public Response<?> likePost(@PathVariable Long postId) {
+        postService.likeAndFavoriteClub(postId); // postService 인스턴스명 수정
+        return Response.ok();
+    }
+
+    @GetMapping("/donggeul/favorite")
+    public Response<List<PostDTO>> getFavoritePosts() {
+        List<PostDTO> posts = postService.getFavoriteClubPosts();
+        return Response.ok(posts);
     }
 }

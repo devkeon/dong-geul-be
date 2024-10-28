@@ -91,13 +91,10 @@ public class BoardJJController {    //재잘재잘 : 자유게시판
     @PostMapping("/jejal/create")
     public Response<PostDetailResponse.SimplePostDTO> createJejalPost(@RequestBody JejalPostRequest jejalPostRequest) {
 
-        // SecurityContextUtil을 통해 현재 로그인된 사용자의 memberId를 가져오기
         Long memberId = securityContextUtil.getContextMemberInfo().getMemberId();
 
-        // 가져온 memberId를 JejalPostRequest에 설정
         jejalPostRequest.setMemberId(memberId);
 
-        // Post 생성
         Post newPost = postService.createJejalPost(jejalPostRequest);
 
         // 응답 DTO 생성
@@ -117,26 +114,19 @@ public class BoardJJController {    //재잘재잘 : 자유게시판
         return Response.ok(simplePostDTO);
     }
 
-    // 댓글 작성
     @PostMapping("/jejal/{postId}/comment")
     public Response<CommentResponse> createComment(
             @PathVariable Long postId,
             @RequestBody CreateCommentRequest request) {
 
-        // 현재 로그인한 사용자의 memberId 가져오기
         Long memberId = securityContextUtil.getContextMemberInfo().getMemberId();
 
-        // 요청 객체에 postId와 memberId 설정
-        request.setPostId(postId);
         request.setMemberId(memberId);
 
-        // commentService에 postId와 request를 전달
         Comment newComment = commentService.createComment(postId, request);
 
-        // 게시글 작성자 ID와 댓글 작성자 ID 비교하여 isAuthor 값 설정
         boolean isAuthor = newComment.getMember().getId().equals(newComment.getPost().getMember().getId());
 
-        // CommentResponseDto로 변환 후 반환
         CommentResponse responseDto = new CommentResponse(
                 newComment.getId(),
                 postId,
