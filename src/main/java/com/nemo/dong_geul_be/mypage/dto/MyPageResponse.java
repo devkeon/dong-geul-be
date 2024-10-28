@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MyPageResponse<T>  {
+    private String code;
     private String message;
     private List<MyPageDTO> data;
 
