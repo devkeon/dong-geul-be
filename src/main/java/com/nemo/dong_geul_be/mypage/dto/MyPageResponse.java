@@ -17,7 +17,7 @@ import java.util.List;
 public class MyPageResponse<T>  {
     private String code;
     private String message;
-    private List<MyPageDTO> data;
+    private MyPageDTO data;
 
 
     @Builder

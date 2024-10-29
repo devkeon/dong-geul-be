@@ -59,7 +59,7 @@ public class MyPageService {
         return MyPageResponse.builder()
                 .code("success")
                 .message("마이페이지 정보 조회 성공")
-                .data(List.of(myPageDTO))
+                .data(myPageDTO)
                 .build();
     }
 
