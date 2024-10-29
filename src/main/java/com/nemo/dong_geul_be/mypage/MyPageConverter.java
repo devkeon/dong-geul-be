@@ -17,7 +17,7 @@ public class MyPageConverter {
             return MyPageResponse.MyPageDTO.builder()
                     .nickName(member.getNickname())
                     .email(member.getEmail())
-                    .role(member.getRole())
+                    .role(member.getRole().name())
                     .myClubList(toMyClubDTOList(member.getMyClubs()))
                     .waitingMemberList(toWaitingClubMemberDTOList(clubRequests))
                     .allClubList(toAllClubDTOList(clubAndHeadMems))
@@ -30,7 +30,7 @@ public class MyPageConverter {
         return myClubs.stream()
                 .map(myClub -> MyPageResponse.ClubDTO.builder()
                         .clubName(myClub.getClubAndHeadMem().getClubName())
-                        .isConfirmed(myClub.getIsConfirmed())
+                        .isConfirmed(myClub.getIsConfirmed().name())
                         .build())
                 .toList();
     }
@@ -51,7 +51,7 @@ public class MyPageConverter {
                 .map(myClub -> MyPageResponse.WaitingClubMemberDTO.builder()
                         .name(myClub.getName())
                         .email(myClub.getMember().getEmail()) //
-                        .isConfirmed(myClub.getIsConfirmed())
+                        .isConfirmed(myClub.getIsConfirmed().name())
                         .studentId(myClub.getStudentId())
                         .build())
                 .toList();
