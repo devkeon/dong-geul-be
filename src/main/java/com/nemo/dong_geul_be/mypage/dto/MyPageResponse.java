@@ -28,7 +28,7 @@ public class MyPageResponse<T>  {
         String nickName;
         String email;
         //운영진 여부
-        Role role;
+        String role;
         //가입한 동아리 리스트
         List<ClubDTO> myClubList;
         //요청 수락 대기중인 회원 리스트 -> Member일 경우 null
@@ -46,7 +46,7 @@ public class MyPageResponse<T>  {
     public static class ClubDTO{
         //가입한 동아리 (개별)
         String clubName;
-        IsConfirmed isConfirmed;
+        String isConfirmed;
     }
 
     @Builder
@@ -66,7 +66,7 @@ public class MyPageResponse<T>  {
         String name;
         String email;
         String studentId;
-        IsConfirmed isConfirmed;
+        String isConfirmed;
     }
 
 }
